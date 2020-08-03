@@ -43,6 +43,33 @@
   }
 
   /**
+   * Method that toggles the modal
+  */
+  function toggleDeleteModal() {
+    window.$('#delete-modal').modal('toggle');
+  }
+
+  /**
+   * Method to delete the whole App Obj
+   *  - Deletes the object from local storage
+   *  - Initializes the application
+   *  - Closes the Delete modal
+  */
+  function continueDelete() {
+    Utils.deleteAppObj();
+    init();
+    toggleDeleteModal();
+  }
+
+  /**
+   * Method to cancel the delete operation
+   *  - Closes the Delete modal
+  */
+  function cancelDelete() {
+    toggleDeleteModal();
+  }
+
+  /**
    * Method to save the artifact details to the localstorage
    * Following are the attributes that are saved:
    *    - Artifact Name (artName)
@@ -109,6 +136,9 @@
       <p class="lead">Tool to check if the retrofit has been done from the base branch</p>
       <hr class="my-4">
       <p>Start adding the artifacts that you need to monitor</p>
+      {#if appObj && appObj.token && appObj.orgName}
+          <button type="button" class="btn btn-danger" on:click={toggleDeleteModal}>Delete Configuration</button>
+      {/if}
     </div>
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->
@@ -119,6 +149,28 @@
       {#if route == Routes.STATUS_CHECK}
           <Status artifacts={Object.values(appObj.artifacts)} token={appObj.token} orgName={appObj.orgName} on:addArtifact={addArtifact}/>
       {/if}
+    </div>
+  </div>
+
+  <!-- Delete modal -->
+  <div class="modal fade" id="delete-modal" data-keyboard="false" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body p-4">
+              <div class="row">
+                <div class="col-12 my-4 text-center">
+                  <p>Do you want to delete all the Configuration?</p>
+                </div>
+                <div class="col-12">
+                  <div class="row justify-content-end">
+                    <button class="btn btn-link" on:click={cancelDelete}>Cancel</button>
+                    <button class="btn btn-danger" on:click={continueDelete}>Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
     </div>
   </div>
 </main>
