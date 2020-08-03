@@ -1,0 +1,5 @@
+node_modules
+renderer/dist/bundle.*
+.vscode/*
+.DS_Store
+dist/*

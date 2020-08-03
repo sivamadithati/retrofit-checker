@@ -1,0 +1,58 @@
+{
+  "name": "git-retrofit-checker",
+  "version": "1.0.0",
+  "description": "Application to check the retrofit status of git branches",
+  "main": "main.js",
+  "scripts": {
+    "start": "run-p start:electron build:watch",
+    "start:electron": "electron .",
+    "build": "electron-packager .",
+    "build:watch": "rollup -c -w",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "Saisiva Reddy Madithati",
+  "license": "MIT",
+  "build": {
+    "appId": "com.sai.githubchecker",
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "squirrel",
+      "icon": "build/icon.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^7.2.4",
+    "electron-builder": "^22.8.0",
+    "electron-builder-squirrel-windows": "^22.8.1",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^1.16.2",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-node-resolve": "^5.0.4",
+    "rollup-plugin-svelte": "^5.1.0",
+    "rollup-plugin-terser": "^5.0.0",
+    "svelte": "^3.5.3"
+  },
+  "dependencies": {
+    "jquery": "^3.5.1"
+  }
+}
