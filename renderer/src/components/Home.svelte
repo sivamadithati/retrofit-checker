@@ -1,4 +1,6 @@
 <script>
+    export let existingToken, existingOrgName;
+
     import { onMount } from 'svelte';
     import { createEventDispatcher } from 'svelte';
 
@@ -6,8 +8,8 @@
 
     let orgName, token;
     function init() {
-        orgName = '';
-        token = '';
+        orgName = existingOrgName ? existingOrgName : '';
+        token = existingToken ? existingToken : '';
     };
 
     onMount(() => {
@@ -20,7 +22,7 @@
         });
     }
 </script>
-<div class="col-12 border p-5">
+<div class="col-10 border p-5">
     <form on:submit|preventDefault={saveGithubDetails}>
         <h3 class="text-center">Github Details</h3>
         <div class="form-group">

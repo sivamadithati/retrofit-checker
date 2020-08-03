@@ -1,8 +1,10 @@
 <script>
+    export let token, orgName;
     import Home from './Home.svelte';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
+
     /**
      * Method that toggles the modal
     */
@@ -15,8 +17,14 @@
         dispatch('continueDelete', {});
     }
 
-    function editGithubConfig() { }
+    function editGithubConfig() {
+        window.$('#edit-github-modal').modal();
+    }
 
+    function saveGithubDetails(event) {
+        window.$('#edit-github-modal').modal('hide');
+        dispatch('saveGithubDetails', event.detail);
+    }
     /**
      * Method to cancel the delete operation
      *  - Closes the Delete modal
@@ -25,13 +33,14 @@
         toggleDeleteModal();
     }
 </script>
+<!-- Main section -->
 <div class="col-10 border text-center my-3 p-5">
     <div class="row">
         <div class="col-12">
             <h3>Github Configuration</h3>
             <p>Change the Github Token or the Organization name</p>
             <button class="btn btn-info float-left" on:click={editGithubConfig}>Edit Github Config</button>
-            <button class="btn btn-danger float-right" on:click={continueDelete}>Delete All Config</button>
+            <button class="btn btn-danger float-right" on:click={toggleDeleteModal}>Delete All Config</button>
         </div>
     </div>
 </div>
@@ -59,8 +68,8 @@
 <div class="modal fade" id="edit-github-modal" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-body p-4">
-                <Home />
+            <div class="modal-body p-4 d-flex justify-content-center">
+                <Home existingToken={token} existingOrgName={orgName} on:saveGithubDetails={saveGithubDetails} />
             </div>
         </div>
     </div>

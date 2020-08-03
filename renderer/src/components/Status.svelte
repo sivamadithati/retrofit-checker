@@ -3,34 +3,14 @@
 
     import Artifacts from './Artifacts.svelte';
     import AddArtifact from './AddArtifact.svelte';
-    import Githubconfig from './Githubconfig.svelte'
+    import Githubconfig from './Githubconfig.svelte';
+    import Retrofitcheck from './Retrofitcheck.svelte';
 
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
 
-    let releaseDate = '', displayStatus = false;
-
-    function toggleAddArtifactModal() {
-        window.$('#add-artifact').modal('toggle');
-    }
-
-    function addArtifact(event) {
-        toggleAddArtifactModal();
-        dispatch("addArtifact", event.detail);
-    }
-
-    function cancelAdd() {
-        toggleAddArtifactModal();
-    }
-
-    function viewArtifacts() {
-        window.$('#artifacts-modal').modal();
-    }
-
-    function closeModal() {
-        window.$('#artifacts-modal').modal('hide');
-    }
+    let releaseDate, displayStatus;
 
     let headers = {
         accept: 'application/vnd.github.v3+json',
@@ -44,38 +24,39 @@
 
         return response.json();
     }
+
+    function checkRetrofit(event) {
+        displayStatus = true;
+        releaseDate = event.detail.date;
+    }
+
+    function init() {
+        displayStatus = false;
+        releaseDate = '';
+    }
+
+    function toggleAddArtifactModal() {
+        window.$('#add-artifact').modal('toggle');
+    }
+
+    function addArtifact(event) {
+        init();
+        toggleAddArtifactModal();
+        dispatch('addArtifact', event.detail);
+    }
+
+    init();
 </script>
 
 {#if artifacts && artifacts.length>0}
 {#if displayStatus==false}
-<div class="col-10 border text-center mb-3 p-5">
-    <div class="row">
-        <div class="col-12 mb-2">
-            <h3 class="text-center">Artifacts</h3>
-            <button class="btn btn-info float-left" on:click={viewArtifacts}> View Artifacts</button>
-            <button class="btn btn-warning float-right" on:click={toggleAddArtifactModal}> + Add Artifact</button>
-        </div>
-    </div>
-</div>
-<div class="col-10 border p-5">
-    <div class="row mb-3">
-        <div class="col-12">
-            <form on:submit|preventDefault="{()=>{displayStatus=true}}">
-                <h3 class="text-center">Status Checker</h3>
-                <div class="form-group">
-                    <label for="releaseDate">Release date</label>
-                    <input type="text" class="form-control" id="releaseDate" aria-describedby="releaseDateHelp"
-                        bind:value={releaseDate} required>
-                    <small id="releaseDateHelp" class="form-text text-muted">If the release branch name is
-                        foo-bar-2020XXXX then please provide 2020XXXX as input</small>
-                </div>
-                <button type="submit" class="float-right btn btn-warning">Check Status</button>
-            </form>
-        </div>
-    </div>
-</div>
-<Githubconfig/>
+<Artifacts artifacts={artifacts} on:addArtifact on:editArtifact on:deleteArtifact/>
+<Retrofitcheck on:checkRetrofit={checkRetrofit}/>
+<Githubconfig on:continueDelete token={token} orgName={orgName} on:saveGithubDetails/>
 {:else}
+<div class="col-10">
+    <button type="submit" class="float-right btn btn-warning" on:click={init} >Check Another Release</button>
+</div>
 <div class="col-10">
     <div class="row justify-content-center p-3">
             {#each artifacts as artifact}
@@ -127,32 +108,16 @@
 {/if}
 
 
-<div class="modal fade" id="add-artifact" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+ <!-- Add Artifact Modal -->
+ <div class="modal fade" id="add-artifact" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-body">
-                <AddArtifact 
-                    on:addArtifact={addArtifact}
-                    on:cancel={cancelAdd}
+       <div class="modal-content">
+          <div class="modal-body">
+             <AddArtifact 
+                on:addArtifact={addArtifact}
+                on:cancel={toggleAddArtifactModal}
                 />
-            </div>
-        </div>
+          </div>
+       </div>
     </div>
-</div>
-
-<div class="modal fade" id="artifacts-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-body">
-                <Artifacts 
-                    artifacts={artifacts} 
-                    on:addArtifact 
-                    on:editArtifact 
-                    on:deleteArtifact
-                    on:closeModal={closeModal}
-                />
-            </div>
-        </div>
-    </div>
-</div>
+ </div>

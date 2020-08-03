@@ -35,8 +35,9 @@
   function saveGithubDetails(event) {
     let data = getDetailObj(event);
     let obj = {
+      ...appObj,
       token: data.token,
-      orgName: data.orgName
+      orgName: data.orgName,
     };
     Utils.setAppObj(obj);
     init();
@@ -142,28 +143,10 @@
             on:editArtifact={editArtifact} 
             on:addArtifact={addArtifact}
             on:deleteArtifact={deleteArtifact}
+            on:continueDelete={continueDelete}
+            on:saveGithubDetails={saveGithubDetails}
           />
       {/if}
     </div>
   </div>
-
-  <!-- Delete modal -->
-  <!-- <div class="modal fade" id="delete-modal" data-keyboard="false" tabindex="-1" role="dialog"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-body p-4">
-              <div class="row">
-                <div class="col-12 my-4 text-center">
-                  <p>Do you want to delete all the Configuration?</p>
-                </div>
-                <div class="col-12 d-flex justify-content-end">
-                    <button class="btn btn-link" on:click={cancelDelete}>Cancel</button>
-                    <button class="btn btn-danger" on:click={continueDelete}>Delete</button>
-                </div>
-              </div>
-            </div>
-        </div>
-    </div>
-  </div> -->
 </main>
