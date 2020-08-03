@@ -77,12 +77,20 @@
 </script>
 
 <!-- Main Artifact section -->
-<div class="col-10 border text-center mb-3 p-5">
+<div class="col-10 text-center mb-2 p-0">
     <div class="row">
         <div class="col-12 mb-2">
-            <h3 class="text-center">Artifacts</h3>
-            <button class="btn btn-info float-left" on:click={viewArtifactsModal}> View Artifacts</button>
-            <button class="btn btn-warning float-right" on:click={showAddArtifactModal}> + Add Artifact</button>
+            <div class="card">
+                <div class="text-center mb-1">
+                    <h3 class="display-4 bg-light text-dark p-1">Artifacts</h3>
+                    <p>Change the Github Token or the Organization name</p>
+                </div>
+                <hr class="my-2" />
+                <div class="card-body">
+                    <button class="btn btn-info float-left" on:click={viewArtifactsModal}> View Artifacts</button>
+                    <button class="btn btn-warning float-right" on:click={showAddArtifactModal}> + Add Artifact</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
