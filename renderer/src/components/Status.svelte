@@ -3,6 +3,7 @@
 
     import Artifacts from './Artifacts.svelte';
     import AddArtifact from './AddArtifact.svelte';
+    import Githubconfig from './Githubconfig.svelte'
 
     import { createEventDispatcher } from 'svelte';
 
@@ -64,7 +65,7 @@
                 <div class="form-group">
                     <label for="releaseDate">Release date</label>
                     <input type="text" class="form-control" id="releaseDate" aria-describedby="releaseDateHelp"
-                        bind:value={releaseDate} on:keypress="{()=>{displayStatus=false}}" required>
+                        bind:value={releaseDate} required>
                     <small id="releaseDateHelp" class="form-text text-muted">If the release branch name is
                         foo-bar-2020XXXX then please provide 2020XXXX as input</small>
                 </div>
@@ -73,18 +74,19 @@
         </div>
     </div>
 </div>
+<Githubconfig/>
 {:else}
-<div class="col-10 border p-5">
-    <div class="row justify-content-center">
+<div class="col-10">
+    <div class="row justify-content-center p-3">
             {#each artifacts as artifact}
                 {#await getGitCompareStatus(artifact)}
-                    <div class="col-10 mb-3 text-center">
+                    <div class="col-12 mb-3 text-center">
                         <div class="spinner-border text-info " role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
                 {:then response}
-                        <div class="col-10 border mb-3" 
+                        <div class="col-12 border mb-3" 
                             class:border-success="{response.ahead_by == 0}" 
                             class:border-warning="{response.message == 'Not Found'}" 
                             class:border-danger="{response.ahead_by && response.ahead_by != 0}" 
@@ -101,7 +103,7 @@
                             </div>
                         </div>
                 {:catch error}
-                <div class="col-10 mb-3">
+                <div class="col-12 mb-3">
                     <div class="card">
                         <div class="card-body text-danger text-center">
                             Error occured {error.message}
@@ -147,6 +149,7 @@
                     artifacts={artifacts} 
                     on:addArtifact 
                     on:editArtifact 
+                    on:deleteArtifact
                     on:closeModal={closeModal}
                 />
             </div>

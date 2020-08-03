@@ -43,13 +43,6 @@
   }
 
   /**
-   * Method that toggles the modal
-  */
-  function toggleDeleteModal() {
-    window.$('#delete-modal').modal('toggle');
-  }
-
-  /**
    * Method to delete the whole App Obj
    *  - Deletes the object from local storage
    *  - Initializes the application
@@ -58,15 +51,6 @@
   function continueDelete() {
     Utils.deleteAppObj();
     init();
-    toggleDeleteModal();
-  }
-
-  /**
-   * Method to cancel the delete operation
-   *  - Closes the Delete modal
-  */
-  function cancelDelete() {
-    toggleDeleteModal();
   }
 
   /**
@@ -111,6 +95,9 @@
   function deleteArtifact(event) {
     let data = getDetailObj(event);
     delete appObj.artifacts[data.existingItemPrefix.replace(/[\/\-]/gi, "_")];
+    // adding this, as svelte will only trigger re-ender if there's an assignment (wouldn't work for delete operation)
+    // https://github.com/sveltejs/svelte/issues/3211
+    appObj.artifacts = appObj.artifacts;
     Utils.setAppObj(appObj);
   }
 
@@ -134,14 +121,10 @@
 <main>
   <div class="container-fluid p-0">
     <!-- Jumbotron -->
-    <div class="jumbotron text-center">
+    <div class="jumbotron text-center p-4">
       <h1 class="display-4">Github Retrofit Checker</h1>
+      <hr class="my-3">
       <p class="lead">Tool to check if the retrofit has been done from the base branch</p>
-      <hr class="my-4">
-      <p>Start adding the artifacts that you need to monitor</p>
-      {#if appObj && appObj.token && appObj.orgName}
-          <button type="button" class="btn btn-danger" on:click={toggleDeleteModal}>Delete Configuration</button>
-      {/if}
     </div>
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->
@@ -158,13 +141,14 @@
             orgName={appObj.orgName} 
             on:editArtifact={editArtifact} 
             on:addArtifact={addArtifact}
+            on:deleteArtifact={deleteArtifact}
           />
       {/if}
     </div>
   </div>
 
   <!-- Delete modal -->
-  <div class="modal fade" id="delete-modal" data-keyboard="false" tabindex="-1" role="dialog"
+  <!-- <div class="modal fade" id="delete-modal" data-keyboard="false" tabindex="-1" role="dialog"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -181,5 +165,5 @@
             </div>
         </div>
     </div>
-  </div>
+  </div> -->
 </main>

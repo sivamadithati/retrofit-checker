@@ -21,6 +21,13 @@
         dispatch('editArtifact', event.detail);
     }
 
+    function deleteArtifact(artifact) {
+        init();
+        dispatch('deleteArtifact', {
+            existingItemPrefix: artifact.artPrefix
+        });
+    }
+
     function cancelAddOrEdit() {
         init();
     }
@@ -81,7 +88,8 @@
                     <th scope="col">Artifact Name</th>
                     <th scope="col">Branch Prefix</th>
                     <th scope="col">Base Branch</th>
-                    <th scope="col">Base Branch</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,6 +101,9 @@
                     <td>{artifact.baseName}</td>
                     <td>
                         <button type="button" class="btn btn-light" on:click="{()=>{editArtifact(artifact)}}">Edit</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" on:click="{()=>{deleteArtifact(artifact)}}">Delete</button>
                     </td>
                     </tr>
                     {/each}
