@@ -1,5 +1,7 @@
 # Retrofit Checker
 
+Only for Organizations that use Github. Doesn't work for individual Github account yet.
+
 Simple lighweight Desktop application to check the retrofit status of any two branches of a repository within an Organization. Application is based on [Svelte](https://svelte.dev/), [Bootstrap](https://getbootstrap.com/) and [Electron](https://www.electronjs.org/)
 
 # How to run the application
