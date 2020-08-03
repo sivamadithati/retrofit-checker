@@ -162,11 +162,9 @@
                 <div class="col-12 my-4 text-center">
                   <p>Do you want to delete all the Configuration?</p>
                 </div>
-                <div class="col-12">
-                  <div class="row justify-content-end">
+                <div class="col-12 d-flex justify-content-end">
                     <button class="btn btn-link" on:click={cancelDelete}>Cancel</button>
                     <button class="btn btn-danger" on:click={continueDelete}>Delete</button>
-                  </div>
                 </div>
               </div>
             </div>
