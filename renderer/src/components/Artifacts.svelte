@@ -7,13 +7,28 @@
 
     const dispatch = createEventDispatcher();
 
-    let searchTerm, displayAddArtifactForm;
+    let searchTerm, displayAddArtifactForm, selectedArtifact, existingItemPrefix;
 
     $: filteredArtifacts = artifacts && artifacts.length > 0 && artifacts.filter(item => item.artName.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
 
     function addArtifact(event) {
         init();
         dispatch('addArtifact', event.detail);
+    }
+
+    function updateArtifact(event) {
+        init();
+        dispatch('editArtifact', event.detail);
+    }
+
+    function cancelAddOrEdit() {
+        init();
+    }
+
+    function editArtifact(artifact) {
+        selectedArtifact = artifact;
+        existingItemPrefix = artifact.artPrefix;
+        showAddArtifactForm();
     }
 
     function closeModal() {
@@ -27,6 +42,8 @@
 
     function init() {
         displayAddArtifactForm = false;
+        selectedArtifact = '';
+        existingItemPrefix = '';
         searchTerm = '';
     }
 
@@ -35,7 +52,13 @@
 </script>
 {#if displayAddArtifactForm == true}
 <div class="col-12 p-5">
-    <AddArtifact on:addArtifact={addArtifact}/>
+    <AddArtifact 
+        artifact={selectedArtifact} 
+        existingItemPrefix={existingItemPrefix} 
+        on:editArtifact={updateArtifact} 
+        on:addArtifact={addArtifact}
+        on:cancel={cancelAddOrEdit}
+    />
 </div>
 {:else}
 <div class="col-12 p-5">
@@ -49,7 +72,7 @@
             </div>
         </div>
         {#if  filteredArtifacts.length>0}
-        <div class="row">
+        <div class="row" style="height: 400px; overflow-y: scroll;">
         <div class="col-12">
             <table class="table table-striped">
                 <thead>
@@ -58,15 +81,19 @@
                     <th scope="col">Artifact Name</th>
                     <th scope="col">Branch Prefix</th>
                     <th scope="col">Base Branch</th>
+                    <th scope="col">Base Branch</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {#each filteredArtifacts as artifact}  
+                    {#each filteredArtifacts as artifact, i}  
                     <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{i+1}</th>
                     <td>{artifact.artName}</td>
                     <td>{artifact.artPrefix}</td>
                     <td>{artifact.baseName}</td>
+                    <td>
+                        <button type="button" class="btn btn-light" on:click="{()=>{editArtifact(artifact)}}">Edit</button>
+                    </td>
                     </tr>
                     {/each}
                 </tbody>

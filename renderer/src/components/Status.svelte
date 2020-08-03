@@ -19,6 +19,10 @@
         dispatch("addArtifact", event.detail);
     }
 
+    function cancelAdd() {
+        toggleAddArtifactModal();
+    }
+
     function viewArtifacts() {
         window.$('#artifacts-modal').modal();
     }
@@ -39,17 +43,17 @@
 
         return response.json();
     }
-
-    function checkGitHubStatus() {
-
-    }
 </script>
 
 {#if artifacts && artifacts.length>0}
-<div class="col-10 text-center mb-3">
-    <div class="row justify-content-between">
-        <button class="btn btn-info" on:click={viewArtifacts}> View Artifacts</button>
-        <button class="btn btn-warning" on:click={toggleAddArtifactModal}> + Add Artifact</button>
+{#if displayStatus==false}
+<div class="col-10 border text-center mb-3 p-5">
+    <div class="row">
+        <div class="col-12 mb-2">
+            <h3 class="text-center">Artifacts</h3>
+            <button class="btn btn-info float-left" on:click={viewArtifacts}> View Artifacts</button>
+            <button class="btn btn-warning float-right" on:click={toggleAddArtifactModal}> + Add Artifact</button>
+        </div>
     </div>
 </div>
 <div class="col-10 border p-5">
@@ -68,8 +72,10 @@
             </form>
         </div>
     </div>
+</div>
+{:else}
+<div class="col-10 border p-5">
     <div class="row justify-content-center">
-        {#if displayStatus==true}
             {#each artifacts as artifact}
                 {#await getGitCompareStatus(artifact)}
                     <div class="col-10 mb-3 text-center">
@@ -104,9 +110,9 @@
                 </div>
                 {/await}
             {/each} 
-        {/if}
     </div>
 </div>
+{/if}
 {:else}
 <div class="col-10 text-center">
     <div class="row justify-content-center">
@@ -119,11 +125,14 @@
 {/if}
 
 
-<div class="modal fade" id="add-artifact" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="add-artifact" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-body">
-                <AddArtifact on:addArtifact={addArtifact}/>
+                <AddArtifact 
+                    on:addArtifact={addArtifact}
+                    on:cancel={cancelAdd}
+                />
             </div>
         </div>
     </div>
@@ -134,7 +143,12 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-body">
-                <Artifacts artifacts={artifacts} on:addArtifact on:closeModal={closeModal}/>
+                <Artifacts 
+                    artifacts={artifacts} 
+                    on:addArtifact 
+                    on:editArtifact 
+                    on:closeModal={closeModal}
+                />
             </div>
         </div>
     </div>

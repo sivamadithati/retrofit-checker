@@ -1,4 +1,6 @@
 <script>
+    export let artifact, existingItemPrefix;
+
     import { createEventDispatcher, onMount } from 'svelte';
 
     const dispatch = createEventDispatcher();
@@ -6,20 +8,32 @@
     let artName, artPrefix, baseName, repoName;
 
     function init() {
-        artName = '';
-        artPrefix = '';
-        baseName = '';
-        repoName = '';
+        artName = artifact ? artifact.artName : '';
+        artPrefix = artifact ? artifact.artPrefix : '';
+        baseName = artifact ? artifact.baseName : '';
+        repoName = artifact ? artifact.repoName : '';
     }
 
     function saveArtifact() {
-        dispatch('addArtifact', {
+        let artObj = {
             artName,
             artPrefix,
             baseName,
-            repoName
-        });
+            repoName,
+            existingItemPrefix
+        };
+        dispatch(artifact ? 'editArtifact' : 'addArtifact', artObj);
+        resetProps();
         init();
+    }
+
+    function cancel() {
+        dispatch('cancel', {});
+    }
+
+    function resetProps() {
+        artifact = '';
+        existingItemPrefix = '';
     }
 
     onMount(() => {
@@ -52,5 +66,9 @@
         <small id="artifactPrefixHelp" class="form-text text-muted">If the relese branch name is
             foo-bar-2020XXXX then base prefix would be foo-bar-.</small>
     </div>
-    <button type="submit" class="btn btn-warning">Save</button>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-link" on:click={cancel}>Cancel</button>
+        <button type="submit" class="btn btn-warning">Save</button>
+    </div>
+
 </form>

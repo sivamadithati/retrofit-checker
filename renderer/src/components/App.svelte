@@ -103,12 +103,15 @@
     Utils.setAppObj(appObj);
   }
 
-  function editArtifact() {
-
+  function editArtifact(event) {
+    deleteArtifact(event);
+    addArtifact(event);
   }
 
-  function deleteArtifact() {
-
+  function deleteArtifact(event) {
+    let data = getDetailObj(event);
+    delete appObj.artifacts[data.existingItemPrefix.replace(/[\/\-]/gi, "_")];
+    Utils.setAppObj(appObj);
   }
 
   /**
@@ -143,11 +146,19 @@
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->
       {#if route == Routes.HOME}
-        <Home on:saveGithubDetails={saveGithubDetails}/>
+        <Home 
+          on:saveGithubDetails={saveGithubDetails}
+        />
       {/if}
       <!-- Check Status section -->
       {#if route == Routes.STATUS_CHECK}
-          <Status artifacts={Object.values(appObj.artifacts)} token={appObj.token} orgName={appObj.orgName} on:addArtifact={addArtifact}/>
+          <Status 
+            artifacts={Object.values(appObj.artifacts)} 
+            token={appObj.token} 
+            orgName={appObj.orgName} 
+            on:editArtifact={editArtifact} 
+            on:addArtifact={addArtifact}
+          />
       {/if}
     </div>
   </div>
