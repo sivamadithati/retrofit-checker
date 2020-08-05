@@ -45,69 +45,107 @@
         dispatch('addArtifact', event.detail);
     }
 
+    function goToArtifacts() {
+        dispatch('goToArtifacts', {});
+    }
+
     init();
 </script>
-
 {#if artifacts && artifacts.length>0}
-{#if displayStatus==false}
-<Artifacts artifacts={artifacts} on:addArtifact on:editArtifact on:deleteArtifact/>
-<Retrofitcheck on:checkRetrofit={checkRetrofit}/>
-<Githubconfig on:continueDelete token={token} orgName={orgName} on:saveGithubDetails/>
-{:else}
-<div class="col-10">
-    <button type="submit" class="float-right btn btn-warning" on:click={init} >Check Another Release</button>
-</div>
-<div class="col-10">
+ {#if displayStatus==false}
+ <Retrofitcheck 
+    on:checkRetrofit={checkRetrofit} 
+    on:goToArtifacts={goToArtifacts}
+    />
+ <!-- <Githubconfig on:continueDelete token={token} orgName={orgName} on:saveGithubDetails/> -->
+ {:else}
+ <div class="col-10">
+    <button type="submit" class="float-right btn btn-warning" on:click={init}>
+       <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
+          <g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round">
+             <circle cx="8.5" cy="8.5" r="5"/>
+             <path d="m17.571 17.5-5.571-5.5"/>
+          </g>
+       </svg>
+       Check Another Release
+    </button>
+    <button class="float-left btn btn-info" on:click={goToArtifacts}>
+       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+          <g fill="none" fill-rule="evenodd" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1 0 0 1 19 2)">
+             <circle cx="8.5" cy="8.5" r="8"/>
+             <polyline points="9.576 6.389 9.646 10.561 5.404 10.561" transform="scale(1 -1) rotate(-45 -12.935 0)"/>
+          </g>
+       </svg>
+       View Artifacts
+    </button>
+ </div>
+ <div class="col-10">
     <div class="row justify-content-center p-3">
-            {#each artifacts as artifact}
-                {#await getGitCompareStatus(artifact)}
-                    <div class="col-12 mb-3 text-center">
-                        <div class="spinner-border text-info " role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                {:then response}
-                        <div class="col-12 border mb-3" 
-                            class:border-success="{response.ahead_by == 0}" 
-                            class:border-warning="{response.message == 'Not Found'}" 
-                            class:border-danger="{response.ahead_by && response.ahead_by != 0}" 
-                        >
-                            <div class="card-body">
-                                <h3 class="card-title">{artifact.artName} ({artifact.repoName})</h3>
-                                {#if response.ahead_by == 0}
-                                    <p class="text-success">{artifact.artPrefix}{releaseDate} has been retrofited from {artifact.baseName}</p>
-                                {:else if response.message == "Not Found"}
-                                    <p class="text-warning">{artifact.artPrefix}{releaseDate} branch doesn't exist</p>
-                                {:else}
-                                    <p class="text-danger">{artifact.artPrefix}{releaseDate} has NOT been retrofited from {artifact.baseName}</p>
-                                {/if}
-                            </div>
-                        </div>
-                {:catch error}
-                <div class="col-12 mb-3">
-                    <div class="card">
-                        <div class="card-body text-danger text-center">
-                            Error occured {error.message}
-                        </div>
-                    </div>
-                </div>
-                {/await}
-            {/each} 
+       <table class="table">
+          <thead>
+             <tr>
+                <th scope="col">#</th>
+                <th scope="col">Artifact Name</th>
+                <th scope="col">Branch Prefix</th>
+                <th scope="col">Base Branch</th>
+                <th scope="col">Release Branch</th>
+                <th scope="col">Retrofit Status</th>
+             </tr>
+          </thead>
+          <tbody>
+             {#each artifacts as artifact, i}
+             {#await getGitCompareStatus(artifact)}
+             <tr>
+                <th colspan="6" class="text-center">
+                   <div class="spinner-border" role="status">
+                      <span class="sr-only">Loading...</span>
+                   </div>
+                </th>
+             </tr>
+             {:then response}
+             <tr 
+                class:bg-success="{response.ahead_by == 0}"
+                class:text-white="{response.ahead_by == 0 || (response.ahead_by && response.ahead_by != 0 
+                || (response.message == 'Bad credentials')) }"
+                class:bg-danger="{response.ahead_by && response.ahead_by != 0 
+                || (response.message == 'Bad credentials')}"
+                class:bg-warning="{response.message == 'Not Found'}"
+                class:text-dark="{response.message == 'Not Found'}"
+                >
+                <th scope="row">{i+1}</th>
+                <td>{artifact.artName}</td>
+                <td>{artifact.artPrefix}</td>
+                <td>{artifact.baseName}</td>
+                <td>{artifact.artPrefix}{releaseDate}</td>
+                {#if response.ahead_by == 0}
+                <td class="text-success">Completed</td>
+                {:else if response.message == "Not Found"}
+                <td>Branch Doesn't exist</td>
+                {:else if response.message == "Bad credentials"}
+                <td>Bad Credentials</td>
+                {:else}
+                <td>Not Completed</td>
+                {/if}
+             </tr>
+             {:catch error}
+             <tr class="text-danger">Error occured {error.message}</tr>
+             {/await}
+             {/each}
+          </tbody>
+       </table>
     </div>
-</div>
-{/if}
-{:else}
-<div class="col-10 text-center">
+ </div>
+ {/if}
+ {:else}
+ <div class="col-10 text-center">
     <div class="row justify-content-center">
-      <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any artifacts yet.</h4>
-      <div class="col-7">
-        <button class="btn btn-warning" on:click={toggleAddArtifactModal}> + Add Artifact</button>
-      </div>
+       <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any artifacts yet.</h4>
+       <div class="col-7">
+          <button class="btn btn-warning" on:click={toggleAddArtifactModal}> + Add Artifact</button>
+       </div>
     </div>
-  </div>
-{/if}
-
-
+ </div>
+ {/if}
  <!-- Add Artifact Modal -->
  <div class="modal fade" id="add-artifact" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">

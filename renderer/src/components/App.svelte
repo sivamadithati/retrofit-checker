@@ -4,6 +4,7 @@
   import { Routes } from '../utils/routes.js';
   import Home from './Home.svelte';
   import Status from './Status.svelte';
+  import Artifacts from './Artifacts.svelte';
   // const app = require("electron").remote.app;
 
   /**
@@ -18,12 +19,12 @@
    * Method to 
    *  - Initialize the local variables
    *  - Check the local storage for personal access token and the organization name
-   *    - If present, set the route to Status check page
+   *    - If present, set the route to Artifacts page
    *    - Else, set the route to Home page
   */
   function init() {
     appObj = Utils.getAppObj();
-    route = appObj && appObj.token && appObj.orgName ? Routes.STATUS_CHECK : Routes.HOME;
+    route = appObj && appObj.token && appObj.orgName ? Routes.ARTIFACTS : Routes.HOME;
   }
 
   /**
@@ -52,6 +53,14 @@
   function continueDelete() {
     Utils.deleteAppObj();
     init();
+  }
+
+  function goToStatusPage() {
+    route = Routes.STATUS_CHECK;
+  }
+
+  function goToArtifacts() {
+    route = Routes.ARTIFACTS;
   }
 
   /**
@@ -134,16 +143,24 @@
           on:saveGithubDetails={saveGithubDetails}
         />
       {/if}
+
+      {#if route == Routes.ARTIFACTS}
+          <Artifacts 
+            artifacts={Object.values(appObj.artifacts)} 
+            on:addArtifact={addArtifact} 
+            on:editArtifact={editArtifact} 
+            on:deleteArtifact={deleteArtifact} 
+            on:goToStatusPage={goToStatusPage}
+          />
+      {/if}
+
       <!-- Check Status section -->
       {#if route == Routes.STATUS_CHECK}
           <Status 
             artifacts={Object.values(appObj.artifacts)} 
             token={appObj.token} 
             orgName={appObj.orgName} 
-            on:editArtifact={editArtifact} 
-            on:addArtifact={addArtifact}
-            on:deleteArtifact={deleteArtifact}
-            on:continueDelete={continueDelete}
+            on:goToArtifacts={goToArtifacts}
             on:saveGithubDetails={saveGithubDetails}
           />
       {/if}
