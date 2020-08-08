@@ -2,9 +2,12 @@
   import { onMount } from 'svelte';
   import { Utils } from '../utils/utils.js';
   import { Routes } from '../utils/routes.js';
+  import Navbar from './Navbar.svelte';
+  import Jumbotron from './Jumbotron.svelte';
   import Home from './Home.svelte';
   import Status from './Status.svelte';
   import Artifacts from './Artifacts.svelte';
+  import Githubconfig from './Githubconfig.svelte';
   // const app = require("electron").remote.app;
 
   /**
@@ -61,6 +64,10 @@
 
   function goToArtifacts() {
     route = Routes.ARTIFACTS;
+  }
+
+  function goToGithubConfig() {
+    route = Routes.GITHUB_CONFIG;
   }
 
   /**
@@ -129,13 +136,13 @@
 
 
 <main>
+  <Navbar on:goToArtifacts={goToArtifacts} on:goToStatusPage={goToStatusPage} on:goToHome={init}
+    on:goToGithubConfig={goToGithubConfig} />
+
   <div class="container-fluid p-0">
-    <!-- Jumbotron -->
-    <div class="jumbotron text-center p-4">
-      <h1 class="display-4">Github Retrofit Checker</h1>
-      <hr class="my-3">
-      <p class="lead">Tool to check if the retrofit has been done from the base branch</p>
-    </div>
+    {#if appObj}
+      <Jumbotron token={appObj.token} orgName={appObj.orgName} />
+    {/if}
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->
       {#if route == Routes.HOME}
@@ -162,7 +169,16 @@
             orgName={appObj.orgName} 
             on:goToArtifacts={goToArtifacts}
             on:saveGithubDetails={saveGithubDetails}
+            on:addArtifact={addArtifact} 
           />
+      {/if}
+
+      {#if route == Routes.GITHUB_CONFIG}
+          <Githubconfig 
+            on:continueDelete={continueDelete} 
+            token={appObj.token} 
+            orgName={appObj.orgName} 
+            on:saveGithubDetails={saveGithubDetails}/>
       {/if}
     </div>
   </div>

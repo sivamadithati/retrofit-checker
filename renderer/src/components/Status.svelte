@@ -1,65 +1,77 @@
 <script>
-    export let artifacts, token, orgName;
+   export let artifacts, token, orgName;
 
-    import Artifacts from './Artifacts.svelte';
-    import AddArtifact from './AddArtifact.svelte';
-    import Githubconfig from './Githubconfig.svelte';
-    import Retrofitcheck from './Retrofitcheck.svelte';
+   import Artifacts from './Artifacts.svelte';
+   import AddArtifact from './AddArtifact.svelte';
+   import Githubconfig from './Githubconfig.svelte';
+   import Retrofitcheck from './Retrofitcheck.svelte';
 
-    import { createEventDispatcher } from 'svelte';
+   import { createEventDispatcher } from 'svelte';
 
-    const dispatch = createEventDispatcher();
+   const dispatch = createEventDispatcher();
 
-    let releaseDate, displayStatus;
+   let releaseDate, displayStatus;
 
-    let headers = {
-        accept: 'application/vnd.github.v3+json',
-        authorization: `token ${token}`
-    }
-    async function getGitCompareStatus(artifact) {
-        let response = await fetch(`https://api.github.com/repos/${orgName}/${artifact.repoName}/compare/${artifact.artPrefix}${releaseDate}...${artifact.baseName}`, {
-            method: 'GET',
-            headers: headers
-        });
+   let headers = {
+      accept: 'application/vnd.github.v3+json',
+      authorization: `token ${token}`
+   }
+   async function getGitCompareStatus(artifact) {
+      let response = await fetch(`https://api.github.com/repos/${orgName}/${artifact.repoName}/compare/${artifact.artPrefix}${releaseDate}...${artifact.baseName}`, {
+         method: 'GET',
+         headers: headers
+      });
 
-        return response.json();
-    }
+      return response.json();
+   }
 
-    function checkRetrofit(event) {
-        displayStatus = true;
-        releaseDate = event.detail.date;
-    }
+   function checkRetrofit(event) {
+      displayStatus = true;
+      releaseDate = event.detail.date;
+   }
 
-    function init() {
-        displayStatus = false;
-        releaseDate = '';
-    }
+   function init() {
+      displayStatus = false;
+      releaseDate = '';
+   }
 
-    function toggleAddArtifactModal() {
-        window.$('#add-artifact').modal('toggle');
-    }
+   function toggleAddArtifactModal() {
+      window.$('#add-artifact').modal('toggle');
+   }
 
-    function addArtifact(event) {
-        init();
-        toggleAddArtifactModal();
-        dispatch('addArtifact', event.detail);
-    }
+   function addArtifact(event) {
+      init();
+      toggleAddArtifactModal();
+      dispatch('addArtifact', event.detail);
+   }
 
-    function goToArtifacts() {
-        dispatch('goToArtifacts', {});
-    }
+   function goToArtifacts() {
+      dispatch('goToArtifacts', {});
+   }
 
-    init();
+   init();
 </script>
+
+<div class="col-10 p-0 mb-2">
+   <div class="row">
+      <div class="col-12">
+         <div class="card">
+            <div class="text-center mb-1">
+               <h3 class="display-4 bg-light text-dark p-1">Status Checker</h3>
+               <p>Details to be filled</p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 {#if artifacts && artifacts.length>0}
  {#if displayStatus==false}
  <Retrofitcheck 
     on:checkRetrofit={checkRetrofit} 
     on:goToArtifacts={goToArtifacts}
     />
- <!-- <Githubconfig on:continueDelete token={token} orgName={orgName} on:saveGithubDetails/> -->
  {:else}
- <div class="col-10">
+ <div class="col-10 my-4">
     <button type="submit" class="float-right btn btn-warning" on:click={init}>
        <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
           <g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round">
@@ -69,19 +81,10 @@
        </svg>
        Check Another Release
     </button>
-    <button class="float-left btn btn-info" on:click={goToArtifacts}>
-       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-          <g fill="none" fill-rule="evenodd" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" transform="matrix(-1 0 0 1 19 2)">
-             <circle cx="8.5" cy="8.5" r="8"/>
-             <polyline points="9.576 6.389 9.646 10.561 5.404 10.561" transform="scale(1 -1) rotate(-45 -12.935 0)"/>
-          </g>
-       </svg>
-       View Artifacts
-    </button>
  </div>
  <div class="col-10">
-    <div class="row justify-content-center p-3">
-       <table class="table">
+    <div class="row justify-content-center p-3" style="height: 400px; overflow-y: scroll;">
+       <table class="table table-bordered">
           <thead>
              <tr>
                 <th scope="col">#</th>
@@ -137,7 +140,7 @@
  </div>
  {/if}
  {:else}
- <div class="col-10 text-center">
+ <div class="col-10 text-center p-5">
     <div class="row justify-content-center">
        <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any artifacts yet.</h4>
        <div class="col-7">

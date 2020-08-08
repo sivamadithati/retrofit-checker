@@ -1,121 +1,110 @@
 <script>
-    export let artifacts;
+   export let artifacts;
 
-    import { createEventDispatcher } from 'svelte';
+   import { createEventDispatcher } from 'svelte';
 
-    import AddArtifact from './AddArtifact.svelte';
+   import AddArtifact from './AddArtifact.svelte';
 
-    const dispatch = createEventDispatcher();
+   const dispatch = createEventDispatcher();
 
-    let searchTerm, selectedArtifact, recreateAddComponent;
+   let searchTerm, selectedArtifact, recreateAddComponent;
 
-    $: filteredArtifacts = artifacts && artifacts.length > 0 && artifacts.filter(item => item.artName.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
+   $: filteredArtifacts = artifacts && artifacts.length > 0 && artifacts.filter(item => item.artName.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
 
-    function addArtifact(event) {
-        init();
-        hideAddArtifactModal();
-        dispatch('addArtifact', event.detail);
-    }
+   function addArtifact(event) {
+      init();
+      hideAddArtifactModal();
+      dispatch('addArtifact', event.detail);
+   }
 
-    function updateArtifact(event) {
-        init();
-        hideAddArtifactModal();
-        dispatch('editArtifact', event.detail);
-    }
+   function updateArtifact(event) {
+      init();
+      hideAddArtifactModal();
+      dispatch('editArtifact', event.detail);
+   }
 
-    function deleteArtifact(artifact) {
-        init();
-        dispatch('deleteArtifact', {
-            existingItemPrefix: artifact.artPrefix
-        });
-    }
+   function deleteArtifact(artifact) {
+      init();
+      dispatch('deleteArtifact', {
+         existingItemPrefix: artifact.artPrefix
+      });
+   }
 
-    function cancelAddOrEdit() {
-        init();
-    }
+   function cancelAddOrEdit() {
+      init();
+   }
 
-    function editArtifact(artifact) {
-        selectedArtifact = artifact;
-        showAddArtifactModal();
-    }
+   function editArtifact(artifact) {
+      selectedArtifact = artifact;
+      showAddArtifactModal();
+   }
 
-    function showAddArtifactModal() {
-        recreateAddComponent = true;
-        window.$('#add-artifact').modal();
-    }
+   function showAddArtifactModal() {
+      recreateAddComponent = true;
+      window.$('#add-artifact').modal();
+   }
 
-    function hideAddArtifactModal() {
-        window.$('#add-artifact').modal('hide');
-    }
+   function hideAddArtifactModal() {
+      window.$('#add-artifact').modal('hide');
+   }
 
-    function goToStatusPage() {
-        dispatch('goToStatusPage', {});
-    }
+   function goToStatusPage() {
+      dispatch('goToStatusPage', {});
+   }
 
-    function init() {
-        selectedArtifact = '';
-        searchTerm = '';
-        recreateAddComponent = false;
-    }
+   function init() {
+      selectedArtifact = '';
+      searchTerm = '';
+      recreateAddComponent = false;
+   }
 
-    // Initialize all the variables
-    init();
+   // Initialize all the variables
+   init();
 </script>
 <!-- Main Artifact section -->
 <div class="col-10 text-center mb-2 p-0">
-    <div class="row">
-        <div class="col-12 mb-2">
-            <div class="card">
-                <div class="text-center mb-1">
-                    <h3 class="display-4 bg-light text-dark p-1">Artifacts</h3>
-                    <p>Change the Github Token or the Organization name</p>
-                </div>
+   <div class="row">
+      <div class="col-12 mb-2">
+         <div class="card">
+            <div class="text-center mb-1">
+               <h3 class="display-4 bg-light text-dark p-1">Artifacts</h3>
+               <p>Change the Github Token or the Organization name</p>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+   </div>
 </div>
 <!-- Artifacts Modal -->
 <div class="col-10 p-5">
-    {#if artifacts && artifacts.length>0}
-    <div class="row mb-4">
-       <div class="d-flex col-12 justify-content-between">
-          <button class="btn btn-warning" on:click={showAddArtifactModal}>
-            <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 4)">
-                    <path d="m10.5.5h-8c-1.1045695 0-2 .8954305-2 2v8c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2v-8c0-1.1045695-.8954305-2-2-2z" transform="matrix(0 1 -1 0 13 0)"/>
-                    <path d="m6.5 3.5v6.056"/><path d="m6.5 3.5v6" transform="matrix(0 1 -1 0 13 0)"/>
-                </g>
-            </svg>  
-            Add Artifact
-          </button>
-          <button class="btn btn-info" on:click={goToStatusPage}>
-            <svg height="21" class="text-white" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
-                <g fill="none" fill-rule="evenodd" stroke="#fff" stroke-linecap="round" stroke-linejoin="round">
-                   <circle cx="8.5" cy="8.5" r="5"/>
-                   <path d="m17.571 17.5-5.571-5.5"/>
-                </g>
-             </svg>
-              Check Status
-            </button>
-       </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-12">
+   {#if artifacts && artifacts.length>0}
+    <div class="row justify-content-between mb-4">
+        <div class="col-7">
             <input id="search-box" class="form-control border border-warning" type="text" placeholder="Search..." bind:value={searchTerm}>
+         </div>
+         <div class="col-4">
+            <button class="btn btn-warning float-right" on:click={showAddArtifactModal}>
+               <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
+                   <g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 4)">
+                       <path d="m10.5.5h-8c-1.1045695 0-2 .8954305-2 2v8c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2v-8c0-1.1045695-.8954305-2-2-2z" transform="matrix(0 1 -1 0 13 0)"/>
+                       <path d="m6.5 3.5v6.056"/><path d="m6.5 3.5v6" transform="matrix(0 1 -1 0 13 0)"/>
+                   </g>
+               </svg>  
+               Add Artifact
+             </button>
          </div>
     </div>
     {#if  filteredArtifacts.length>0}
     <div class="row" style="height: 400px; overflow-y: scroll;">
        <div class="col-12">
-          <table class="table table-striped">
+          <table class="table table-bordered">
              <thead>
                 <tr>
                    <th scope="col">#</th>
                    <th scope="col">Artifact Name</th>
                    <th scope="col">Branch Prefix</th>
                    <th scope="col">Base Branch</th>
-                   <th scope="col"></th>
-                   <th scope="col"></th>
+                   <th scope="col">Edit</th>
+                   <th scope="col">Delete</th>
                 </tr>
              </thead>
              <tbody>

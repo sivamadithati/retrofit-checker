@@ -34,7 +34,7 @@
     }
 </script>
 <!-- Main section -->
-<div class="col-10 text-center my-2 p-0">
+<div class="col-10 text-center mb-4 p-0">
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -42,10 +42,38 @@
                     <h3 class="display-4 bg-light text-dark p-1">Github Configuration</h3>
                     <p>Change the Github Token or the Organization name</p>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-8 text-center p-0 my-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card text-center ">
+                <div class="mb-1">
+                    <h3 class="display-5 bg-light text-dark p-1">Edit Configuration</h3>
+                    <p>To edit the Github Personal Access Token and Organization Name</p>
+                </div>
                 <hr class="my-2" />
                 <div class="card-body">
-                    <button class="btn btn-info float-left" on:click={editGithubConfig}>Edit Github Config</button>
-                    <button class="btn btn-danger float-right" on:click={toggleDeleteModal}>Delete All Config</button>
+                    <button class="btn btn-info" on:click={editGithubConfig}>Edit Github Config</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-8 text-center p-0 my-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card text-center">
+                <div class="mb-1">
+                    <h3 class="display-5 bg-light text-dark p-1">Delete Configuration</h3>
+                    <p>To delete the entire Github configuration, including Token, Organization Name and Artifacts</p>
+                </div>
+                <hr class="my-2" />
+                <div class="card-body">
+                    <button class="btn btn-danger" on:click={toggleDeleteModal}>Delete All Config</button>
                 </div>
             </div>
         </div>

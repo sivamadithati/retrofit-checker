@@ -21,18 +21,6 @@
 
     init();
 </script>
-<div class="col-10 p-0 mb-2">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="text-center mb-1">
-                    <h3 class="display-4 bg-light text-dark p-1">Status Checker</h3>
-                    <p>Details to be filled</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="col-10 p-5 border my-4">
     <form on:submit|preventDefault="{checkRetrofit}">
