@@ -16,7 +16,7 @@
   */
 
 
-  let route, appObj;
+  let route, appObj, loaded;
 
   /**
    * Method to 
@@ -27,6 +27,7 @@
   */
   function init() {
     appObj = Utils.getAppObj();
+    loaded = true;
     route = appObj && appObj.token && appObj.orgName ? Routes.ARTIFACTS : Routes.HOME;
   }
 
@@ -136,6 +137,7 @@
 
 
 <main>
+  {#if loaded}
   <Navbar 
       token={appObj.token} 
       orgName={appObj.orgName} 
@@ -146,9 +148,7 @@
   />
 
   <div class="container-fluid p-0">
-    {#if appObj}
       <Jumbotron token={appObj.token} orgName={appObj.orgName} />
-    {/if}
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->
       {#if route == Routes.HOME}
@@ -188,4 +188,5 @@
       {/if}
     </div>
   </div>
+  {/if}
 </main>
