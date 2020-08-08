@@ -1,4 +1,6 @@
 <script>
+    export let token, orgName;
+
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
@@ -46,6 +48,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    {#if token && orgName}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" class:active="{selectedTab=='home'}">
@@ -69,4 +72,5 @@
             </svg>
         </button>
     </div>
+    {/if}
 </nav>

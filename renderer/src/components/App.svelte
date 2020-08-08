@@ -136,8 +136,14 @@
 
 
 <main>
-  <Navbar on:goToArtifacts={goToArtifacts} on:goToStatusPage={goToStatusPage} on:goToHome={init}
-    on:goToGithubConfig={goToGithubConfig} />
+  <Navbar 
+      token={appObj.token} 
+      orgName={appObj.orgName} 
+      on:goToArtifacts={goToArtifacts}
+      on:goToStatusPage={goToStatusPage} 
+      on:goToHome={init} 
+      on:goToGithubConfig={goToGithubConfig}
+  />
 
   <div class="container-fluid p-0">
     {#if appObj}
