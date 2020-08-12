@@ -15,6 +15,7 @@
   "license": "MIT",
   "build": {
     "appId": "com.sai.githubchecker",
+    "productName": "Retrofit Checker",
     "dmg": {
       "contents": [
         {

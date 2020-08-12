@@ -2,8 +2,12 @@
   import { onMount } from 'svelte';
   import { Utils } from '../utils/utils.js';
   import { Routes } from '../utils/routes.js';
+  import Navbar from './Navbar.svelte';
+  import Jumbotron from './Jumbotron.svelte';
   import Home from './Home.svelte';
   import Status from './Status.svelte';
+  import Artifacts from './Artifacts.svelte';
+  import Githubconfig from './Githubconfig.svelte';
   // const app = require("electron").remote.app;
 
   /**
@@ -12,18 +16,19 @@
   */
 
 
-  let route, appObj;
+  let route, appObj, loaded;
 
   /**
    * Method to 
    *  - Initialize the local variables
    *  - Check the local storage for personal access token and the organization name
-   *    - If present, set the route to Status check page
+   *    - If present, set the route to Artifacts page
    *    - Else, set the route to Home page
   */
   function init() {
     appObj = Utils.getAppObj();
-    route = appObj && appObj.token && appObj.orgName ? Routes.STATUS_CHECK : Routes.HOME;
+    loaded = true;
+    route = appObj && appObj.token && appObj.orgName ? Routes.ARTIFACTS : Routes.HOME;
   }
 
   /**
@@ -52,6 +57,18 @@
   function continueDelete() {
     Utils.deleteAppObj();
     init();
+  }
+
+  function goToStatusPage() {
+    route = Routes.STATUS_CHECK;
+  }
+
+  function goToArtifacts() {
+    route = Routes.ARTIFACTS;
+  }
+
+  function goToGithubConfig() {
+    route = Routes.GITHUB_CONFIG;
   }
 
   /**
@@ -120,13 +137,18 @@
 
 
 <main>
+  {#if loaded}
+  <Navbar 
+      token={appObj.token} 
+      orgName={appObj.orgName} 
+      on:goToArtifacts={goToArtifacts}
+      on:goToStatusPage={goToStatusPage} 
+      on:goToHome={init} 
+      on:goToGithubConfig={goToGithubConfig}
+  />
+
   <div class="container-fluid p-0">
-    <!-- Jumbotron -->
-    <div class="jumbotron text-center p-4">
-      <h1 class="display-4">Github Retrofit Checker</h1>
-      <hr class="my-3">
-      <p class="lead">Tool to check if the retrofit has been done from the base branch</p>
-    </div>
+      <Jumbotron token={appObj.token} orgName={appObj.orgName} />
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->
       {#if route == Routes.HOME}
@@ -134,19 +156,37 @@
           on:saveGithubDetails={saveGithubDetails}
         />
       {/if}
+
+      {#if route == Routes.ARTIFACTS}
+          <Artifacts 
+            artifacts={Object.values(appObj.artifacts)} 
+            on:addArtifact={addArtifact} 
+            on:editArtifact={editArtifact} 
+            on:deleteArtifact={deleteArtifact} 
+            on:goToStatusPage={goToStatusPage}
+          />
+      {/if}
+
       <!-- Check Status section -->
       {#if route == Routes.STATUS_CHECK}
           <Status 
             artifacts={Object.values(appObj.artifacts)} 
             token={appObj.token} 
             orgName={appObj.orgName} 
-            on:editArtifact={editArtifact} 
-            on:addArtifact={addArtifact}
-            on:deleteArtifact={deleteArtifact}
-            on:continueDelete={continueDelete}
+            on:goToArtifacts={goToArtifacts}
             on:saveGithubDetails={saveGithubDetails}
+            on:addArtifact={addArtifact} 
           />
+      {/if}
+
+      {#if route == Routes.GITHUB_CONFIG}
+          <Githubconfig 
+            on:continueDelete={continueDelete} 
+            token={appObj.token} 
+            orgName={appObj.orgName} 
+            on:saveGithubDetails={saveGithubDetails}/>
       {/if}
     </div>
   </div>
+  {/if}
 </main>

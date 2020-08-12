@@ -1,7 +1,7 @@
 <script>
-    export let artifact, existingItemPrefix;
+    export let artifact;
 
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { createEventDispatcher, onMount, beforeUpdate } from 'svelte';
 
     const dispatch = createEventDispatcher();
 
@@ -20,7 +20,7 @@
             artPrefix,
             baseName,
             repoName,
-            existingItemPrefix
+            existingItemPrefix: artifact ? artifact.artPrefix : ''
         };
         dispatch(artifact ? 'editArtifact' : 'addArtifact', artObj);
         resetProps();
@@ -33,12 +33,9 @@
 
     function resetProps() {
         artifact = '';
-        existingItemPrefix = '';
     }
 
-    onMount(() => {
-        init();
-    });
+    init();
 </script>
 
 
