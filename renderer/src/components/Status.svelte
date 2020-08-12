@@ -121,7 +121,7 @@
                 <td>{artifact.baseName}</td>
                 <td>{artifact.artPrefix}{releaseDate}</td>
                 {#if response.ahead_by == 0}
-                <td class="text-success">Completed</td>
+                <td>Completed</td>
                 {:else if response.message == "Not Found"}
                 <td>Branch Doesn't exist</td>
                 {:else if response.message == "Bad credentials"}
