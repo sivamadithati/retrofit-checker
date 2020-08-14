@@ -3,3 +3,4 @@ renderer/dist/bundle.*
 .vscode/*
 .DS_Store
 dist/*
+npm-debug.log
