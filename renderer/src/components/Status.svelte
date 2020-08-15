@@ -1,8 +1,7 @@
 <script>
-   export let artifacts, token, orgName;
+   export let repositories, token, orgName;
 
-   import Artifacts from './Artifacts.svelte';
-   import AddArtifact from './AddArtifact.svelte';
+   import AddRepository from './AddRepository.svelte';
    import Githubconfig from './Githubconfig.svelte';
    import Retrofitcheck from './Retrofitcheck.svelte';
 
@@ -16,8 +15,8 @@
       accept: 'application/vnd.github.v3+json',
       authorization: `token ${token}`
    }
-   async function getGitCompareStatus(artifact) {
-      let response = await fetch(`https://api.github.com/repos/${orgName}/${artifact.repoName}/compare/${artifact.artPrefix}${releaseDate}...${artifact.baseName}`, {
+   async function getGitCompareStatus(repository) {
+      let response = await fetch(`https://api.github.com/repos/${orgName}/${repository.repoName}/compare/${repository.repoPrefix}${releaseDate}...${repository.baseName}`, {
          method: 'GET',
          headers: headers
       });
@@ -35,18 +34,18 @@
       releaseDate = '';
    }
 
-   function toggleAddArtifactModal() {
-      window.$('#add-artifact').modal('toggle');
+   function toggleAddRepositoryModal() {
+      window.$('#add-repository').modal('toggle');
    }
 
-   function addArtifact(event) {
+   function addRepository(event) {
       init();
-      toggleAddArtifactModal();
-      dispatch('addArtifact', event.detail);
+      toggleAddRepositoryModal();
+      dispatch('addRepository', event.detail);
    }
 
-   function goToArtifacts() {
-      dispatch('goToArtifacts', {});
+   function goToRepositories() {
+      dispatch('goToRepositories', {});
    }
 
    init();
@@ -64,11 +63,11 @@
       </div>
    </div>
 </div>
-{#if artifacts && artifacts.length>0}
+{#if repositories && repositories.length>0}
  {#if displayStatus==false}
  <Retrofitcheck 
     on:checkRetrofit={checkRetrofit} 
-    on:goToArtifacts={goToArtifacts}
+    on:goToRepositories={goToRepositories}
     />
  {:else}
  <div class="col-10 my-4">
@@ -88,16 +87,16 @@
           <thead>
              <tr>
                 <th scope="col">#</th>
-                <th scope="col">Artifact Name</th>
-                <th scope="col">Branch Prefix</th>
+                <th scope="col">Repository Description</th>
+                <th scope="col">Repository Prefix</th>
                 <th scope="col">Base Branch</th>
                 <th scope="col">Release Branch</th>
                 <th scope="col">Retrofit Status</th>
              </tr>
           </thead>
           <tbody>
-             {#each artifacts as artifact, i}
-             {#await getGitCompareStatus(artifact)}
+             {#each repositories as repository, i}
+             {#await getGitCompareStatus(repository)}
              <tr>
                 <th colspan="6" class="text-center">
                    <div class="spinner-border" role="status">
@@ -114,10 +113,10 @@
                 class="alert"
                 >
                 <th scope="row">{i+1}</th>
-                <td>{artifact.artName}</td>
-                <td>{artifact.artPrefix}</td>
-                <td>{artifact.baseName}</td>
-                <td>{artifact.artPrefix}{releaseDate}</td>
+                <td>{repository.repoDesc}</td>
+                <td>{repository.repoPrefix}</td>
+                <td>{repository.baseName}</td>
+                <td>{repository.repoPrefix}{releaseDate}</td>
                 {#if response.ahead_by == 0}
                 <td>Completed</td>
                 {:else if response.message == "Not Found"}
@@ -142,21 +141,21 @@
  {:else}
  <div class="col-10 text-center p-5">
     <div class="row justify-content-center">
-       <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any artifacts yet.</h4>
+       <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any repositories yet.</h4>
        <div class="col-7">
-          <button class="btn btn-warning" on:click={toggleAddArtifactModal}> + Add Artifact</button>
+          <button class="btn btn-warning" on:click={toggleAddRepositoryModal}> + Add Repository</button>
        </div>
     </div>
  </div>
  {/if}
- <!-- Add Artifact Modal -->
- <div class="modal fade" id="add-artifact" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+ <!-- Add Repository Modal -->
+ <div class="modal fade" id="add-repository" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
        <div class="modal-content">
           <div class="modal-body">
-             <AddArtifact 
-                on:addArtifact={addArtifact}
-                on:cancel={toggleAddArtifactModal}
+             <AddRepository 
+                on:addRepository={addRepository}
+                on:cancel={toggleAddRepositoryModal}
                 />
           </div>
        </div>

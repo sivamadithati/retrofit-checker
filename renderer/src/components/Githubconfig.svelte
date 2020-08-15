@@ -69,7 +69,7 @@
             <div class="card text-center">
                 <div class="mb-1">
                     <h3 class="display-5 bg-light text-dark p-1">Delete Configuration</h3>
-                    <p>To delete the entire Github configuration, including Token, Organization Name and Artifacts</p>
+                    <p>To delete the entire Github configuration, including Token, Organization Name and Repositories</p>
                 </div>
                 <hr class="my-2" />
                 <div class="card-body">
@@ -82,7 +82,7 @@
 
 <!-- Delete modal -->
 <div class="modal fade" id="delete-modal" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-body p-4">
                 <div class="row">
