@@ -1,6 +1,6 @@
 {
   "name": "git-retrofit-checker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Application to check the retrofit status of git branches",
   "main": "main.js",
   "scripts": {
@@ -13,6 +13,10 @@
   },
   "author": "Saisiva Reddy Madithati",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sivamadithati/retrofit-checker.git"
+},
   "build": {
     "appId": "com.sai.githubchecker",
     "productName": "Retrofit Checker",
