@@ -1,51 +1,48 @@
 <script>
-   export let artifacts;
+   export let repositories;
 
    import { createEventDispatcher } from 'svelte';
 
-   import AddArtifact from './AddArtifact.svelte';
+   import AddRepository from './AddRepository.svelte';
 
    const dispatch = createEventDispatcher();
 
-   let searchTerm, selectedArtifact, recreateAddComponent;
+   let searchTerm, selectedRepository, recreateAddComponent;
 
-   $: filteredArtifacts = artifacts && artifacts.length > 0 && artifacts.filter(item => item.artName.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
+   $: filteredRepositories = repositories && repositories.length > 0 && repositories.filter(item => item.repoDesc.toUpperCase().indexOf(searchTerm.toUpperCase()) !== -1);
 
-   function addArtifact(event) {
+   function addRepository(event) {
       init();
-      hideAddArtifactModal();
-      dispatch('addArtifact', event.detail);
+      hideAddRepositoryModal();
+      dispatch('addRepository', event.detail);
    }
 
-   function updateArtifact(event) {
+   function updateRepository(event) {
       init();
-      hideAddArtifactModal();
-      dispatch('editArtifact', event.detail);
+      hideAddRepositoryModal();
+      dispatch('editRepository', event.detail);
    }
 
-   function deleteArtifact(artifact) {
+   function deleteRepository(repository) {
       init();
-      dispatch('deleteArtifact', {
-         existingItemPrefix: artifact.artPrefix
+      dispatch('deleteRepository', {
+         existingItemPrefix: repository.repoPrefix
       });
    }
 
-   function cancelAddOrEdit() {
-      init();
+   function editRepository(repository) {
+      selectedRepository = repository;
+      showAddRepositoryModal();
    }
 
-   function editArtifact(artifact) {
-      selectedArtifact = artifact;
-      showAddArtifactModal();
-   }
-
-   function showAddArtifactModal() {
+   function showAddRepositoryModal() {
       recreateAddComponent = true;
-      window.$('#add-artifact').modal();
+      window.$('#add-repository').modal();
    }
 
-   function hideAddArtifactModal() {
-      window.$('#add-artifact').modal('hide');
+   function hideAddRepositoryModal() {
+      init();
+      window.$('#add-repository').modal('hide');
    }
 
    function goToStatusPage() {
@@ -53,7 +50,7 @@
    }
 
    function init() {
-      selectedArtifact = '';
+      selectedRepository = '';
       searchTerm = '';
       recreateAddComponent = false;
    }
@@ -61,61 +58,61 @@
    // Initialize all the variables
    init();
 </script>
-<!-- Main Artifact section -->
+<!-- Main Repository section -->
 <div class="col-10 text-center mb-2 p-0">
    <div class="row">
       <div class="col-12 mb-2">
          <div class="card">
             <div class="text-center mb-1">
-               <h3 class="display-4 bg-light text-dark p-1">Artifacts</h3>
-               <p>View, Add and Search the artifacts</p>
+               <h3 class="display-4 bg-light text-dark p-1">Repositories</h3>
+               <p>View, Add and Search the repositories</p>
             </div>
          </div>
       </div>
    </div>
 </div>
-<!-- Artifacts Modal -->
+<!-- Repositories Modal -->
 <div class="col-10 p-5">
-   {#if artifacts && artifacts.length>0}
+   {#if repositories && repositories.length>0}
     <div class="row justify-content-between mb-4">
         <div class="col-7">
             <input id="search-box" class="form-control border border-warning" type="text" placeholder="Search..." bind:value={searchTerm}>
          </div>
          <div class="col-4">
-            <button class="btn btn-warning float-right" on:click={showAddArtifactModal}>
+            <button class="btn btn-warning float-right" on:click={showAddRepositoryModal}>
                <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
                    <g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round" transform="translate(4 4)">
                        <path d="m10.5.5h-8c-1.1045695 0-2 .8954305-2 2v8c0 1.1045695.8954305 2 2 2h8c1.1045695 0 2-.8954305 2-2v-8c0-1.1045695-.8954305-2-2-2z" transform="matrix(0 1 -1 0 13 0)"/>
                        <path d="m6.5 3.5v6.056"/><path d="m6.5 3.5v6" transform="matrix(0 1 -1 0 13 0)"/>
                    </g>
                </svg>  
-               Add Artifact
+               Add Repository
              </button>
          </div>
     </div>
-    {#if  filteredArtifacts.length>0}
+    {#if  filteredRepositories.length>0}
     <div class="row" style="height: 400px; overflow-y: scroll;">
        <div class="col-12">
           <table class="table table-bordered">
              <thead>
                 <tr>
                    <th scope="col">#</th>
-                   <th scope="col">Artifact Name</th>
-                   <th scope="col">Branch Prefix</th>
+                   <th scope="col">Repository Description</th>
+                   <th scope="col">Repository Prefix</th>
                    <th scope="col">Base Branch</th>
                    <th scope="col">Edit</th>
                    <th scope="col">Delete</th>
                 </tr>
              </thead>
              <tbody>
-                {#each filteredArtifacts as artifact, i}  
+                {#each filteredRepositories as repository, i}  
                 <tr>
                    <th scope="row">{i+1}</th>
-                   <td>{artifact.artName}</td>
-                   <td>{artifact.artPrefix}</td>
-                   <td>{artifact.baseName}</td>
+                   <td>{repository.repoDesc}</td>
+                   <td>{repository.repoPrefix}</td>
+                   <td>{repository.baseName}</td>
                    <td>
-                      <button type="button" class="btn btn-light" on:click="{()=>{editArtifact(artifact)}}">
+                      <button type="button" class="btn btn-light" on:click="{()=>{editRepository(repository)}}">
                         <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fill-rule="evenodd" stroke="#2a2e3b" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 2)">
                                <path d="m7 2.5h-4.5c-1.1045695 0-2 .8954305-2 2v9.0003682c0 1.1045695.8954305 2 2 2h10c1.1045695 0 2-.8954305 2-2v-4.5003682"/>
@@ -126,7 +123,7 @@
                       </button>
                    </td>
                    <td>
-                      <button type="button" class="btn btn-danger" on:click="{()=>{deleteArtifact(artifact)}}">
+                      <button type="button" class="btn btn-danger" on:click="{()=>{deleteRepository(repository)}}">
                         <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
                             <g fill="none" fill-rule="evenodd" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 2)">
                                <path d="m2.5 2.5h10v12c0 1.1045695-.8954305 2-2 2h-6c-1.1045695 0-2-.8954305-2-2zm5-2c1.1045695 0 2 .8954305 2 2h-4c0-1.1045695.8954305-2 2-2z"/>
@@ -147,7 +144,7 @@
     <div class="row">
        <div class="col-12 text-center">
           <div class="row justify-content-center">
-             <h4 class="col-12 text-info display-5 mb-4">Oops! Artifacts with the name {searchTerm} doesn't exist.</h4>
+             <h4 class="col-12 text-info display-5 mb-4">Oops! Repository with the name {searchTerm} doesn't exist.</h4>
           </div>
        </div>
     </div>
@@ -156,26 +153,26 @@
     <div class="row">
        <div class="col-12 text-center">
           <div class="row justify-content-center">
-             <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any artifacts yet.</h4>
+             <h4 class="col-12 text-info display-5 mb-4">Oops! Looks like you haven't added any repositories yet.</h4>
              <div class="col-7">
-                <button class="btn btn-warning" on:click={showAddArtifactModal}> + Add Artifact</button>
+                <button class="btn btn-warning" on:click={showAddRepositoryModal}> + Add Repository</button>
              </div>
           </div>
        </div>
     </div>
     {/if}
  </div>
- <!-- Add Artifact Modal -->
- <div class="modal fade" id="add-artifact" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+ <!-- Add Repository Modal -->
+ <div class="modal fade" id="add-repository" data-keyboard="false" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
        <div class="modal-content">
           <div class="modal-body">
              {#if recreateAddComponent == true} 
-             <AddArtifact 
-                on:addArtifact={addArtifact}
-                on:cancel={hideAddArtifactModal}
-                on:editArtifact={updateArtifact}
-                artifact={selectedArtifact}
+             <AddRepository 
+                on:addRepository={addRepository}
+                on:cancel={hideAddRepositoryModal}
+                on:editRepository={updateRepository}
+                repository={selectedRepository}
                 />
             {/if}
           </div>

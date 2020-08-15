@@ -6,7 +6,7 @@
   import Jumbotron from './Jumbotron.svelte';
   import Home from './Home.svelte';
   import Status from './Status.svelte';
-  import Artifacts from './Artifacts.svelte';
+  import Repos from './Repos.svelte';
   import Githubconfig from './Githubconfig.svelte';
   // const app = require("electron").remote.app;
 
@@ -22,13 +22,13 @@
    * Method to 
    *  - Initialize the local variables
    *  - Check the local storage for personal access token and the organization name
-   *    - If present, set the route to Artifacts page
+   *    - If present, set the route to Repositories page
    *    - Else, set the route to Home page
   */
   function init() {
     appObj = Utils.getAppObj();
     loaded = true;
-    route = appObj && appObj.token && appObj.orgName ? Routes.ARTIFACTS : Routes.HOME;
+    route = appObj && appObj.token && appObj.orgName ? Routes.REPOS : Routes.HOME;
   }
 
   /**
@@ -63,8 +63,8 @@
     route = Routes.STATUS_CHECK;
   }
 
-  function goToArtifacts() {
-    route = Routes.ARTIFACTS;
+  function goToRepositories() {
+    route = Routes.REPOS;
   }
 
   function goToGithubConfig() {
@@ -72,50 +72,50 @@
   }
 
   /**
-   * Method to save the artifact details to the localstorage
+   * Method to save the repository details to the localstorage
    * Following are the attributes that are saved:
-   *    - Artifact Name (artName)
+   *    - Repository Description (repoDesc)
    *    - Base Branch (baseName)
-   *    - Artifact Common Prefix (artPrefix)
+   *    - Repository Common Prefix (repoPrefix)
    *    - Repository Name (repoName)
    * 
    * For Eg: If the following is the Github URL for your repository:
    * 
    * URL: https://github.com/FooBar/foo/tree/foo-branch-2020XXXX
    * 
-   * Artifact Name 
+   * Repository Description 
    *    - is some text for you to identify easily
    * Base Branch 
    *    - default branch where all the code will be merged after the production deployment or release (usually master)
-   * Artifact Common Prefix
+   * Repository Common Prefix
    *    - From the above URL, branch name is foo-branch-2020XXXX
-   *    - If 'foo-branch-' is commonly prefixed for all the branches that you create, then 'foo-branch-' is the Artifact Common Prefix
+   *    - If 'foo-branch-' is commonly prefixed for all the branches that you create, then 'foo-branch-' is the Repository Common Prefix
    * Repository Name
    *    - In the above URL, "foo" is the repository name
   */
-  function addArtifact(event) {
+  function addRepository(event) {
     let data = getDetailObj(event);
-    let artifact = {
-      artName: data.artName,
+    let repository = {
+      repoDesc: data.repoDesc,
       baseName: data.baseName,
-      artPrefix: data.artPrefix,
+      repoPrefix: data.repoPrefix,
       repoName: data.repoName
     }
-    appObj.artifacts[artifact.artPrefix.replace(/[\/\-]/gi, "_")] = artifact;
+    appObj.repositories[repository.repoPrefix.replace(/[\/\-]/gi, "_")] = repository;
     Utils.setAppObj(appObj);
   }
 
-  function editArtifact(event) {
-    deleteArtifact(event);
-    addArtifact(event);
+  function editRepository(event) {
+    deleteRepository(event);
+    addRepository(event);
   }
 
-  function deleteArtifact(event) {
+  function deleteRepository(event) {
     let data = getDetailObj(event);
-    delete appObj.artifacts[data.existingItemPrefix.replace(/[\/\-]/gi, "_")];
+    delete appObj.repositories[data.existingItemPrefix.replace(/[\/\-]/gi, "_")];
     // adding this, as svelte will only trigger re-ender if there's an assignment (wouldn't work for delete operation)
     // https://github.com/sveltejs/svelte/issues/3211
-    appObj.artifacts = appObj.artifacts;
+    appObj.repositories = appObj.repositories;
     Utils.setAppObj(appObj);
   }
 
@@ -141,7 +141,7 @@
   <Navbar 
       token={appObj.token} 
       orgName={appObj.orgName} 
-      on:goToArtifacts={goToArtifacts}
+      on:goToRepositories={goToRepositories}
       on:goToStatusPage={goToStatusPage} 
       on:goToHome={init} 
       on:goToGithubConfig={goToGithubConfig}
@@ -157,12 +157,12 @@
         />
       {/if}
 
-      {#if route == Routes.ARTIFACTS}
-          <Artifacts 
-            artifacts={Object.values(appObj.artifacts)} 
-            on:addArtifact={addArtifact} 
-            on:editArtifact={editArtifact} 
-            on:deleteArtifact={deleteArtifact} 
+      {#if route == Routes.REPOS}
+          <Repos 
+            repositories={Object.values(appObj.repositories)} 
+            on:addRepository={addRepository} 
+            on:editRepository={editRepository} 
+            on:deleteRepository={deleteRepository} 
             on:goToStatusPage={goToStatusPage}
           />
       {/if}
@@ -170,12 +170,12 @@
       <!-- Check Status section -->
       {#if route == Routes.STATUS_CHECK}
           <Status 
-            artifacts={Object.values(appObj.artifacts)} 
+            repositories={Object.values(appObj.repositories)} 
             token={appObj.token} 
             orgName={appObj.orgName} 
-            on:goToArtifacts={goToArtifacts}
+            on:goToRepositories={goToRepositories}
             on:saveGithubDetails={saveGithubDetails}
-            on:addArtifact={addArtifact} 
+            on:addRepository={addRepository} 
           />
       {/if}
 
