@@ -7,9 +7,9 @@
 
     let selectedTab;
 
-    function goToArtifacts() {
-        selectedTab = 'artifacts'; // Move to constants
-        dispatch('goToArtifacts', {});
+    function goToRepositories() {
+        selectedTab = 'repositories'; // Move to constants
+        dispatch('goToRepositories', {});
     }
     function goToStatusPage() {
         selectedTab = 'check-status'; // Move to constants
@@ -54,8 +54,8 @@
             <li class="nav-item" class:active="{selectedTab=='home'}">
                 <a class="nav-link" href="#" on:click={goToHome}>Home</a>
             </li>
-            <li class="nav-item" class:active="{selectedTab=='artifacts'}">
-                <a class="nav-link" href="#" on:click={goToArtifacts}>Artifacts</a>
+            <li class="nav-item" class:active="{selectedTab=='repositories'}">
+                <a class="nav-link" href="#" on:click={goToRepositories}>Repositories</a>
             </li>
             <li class="nav-item" class:active="{selectedTab=='check-status'}">
                 <a class="nav-link" href="#" on:click={goToStatusPage}>Check Status</a>

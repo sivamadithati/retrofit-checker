@@ -4,7 +4,7 @@ export const Utils = {
         window.localStorage.setItem(Utils.appKey, JSON.stringify(val));
     },
     getAppObj: () => {
-        let appObj = { token: '', orgName: '', artifacts: {} };
+        let appObj = { token: '', orgName: '', repositories: {} };
         return { ...appObj, ...JSON.parse(window.localStorage.getItem(Utils.appKey)) };
     },
     deleteAppObj: () => {

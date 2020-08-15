@@ -11,8 +11,8 @@
         });
     }
 
-    function goToArtifacts() {
-        dispatch('goToArtifacts', {});
+    function goToRepositories() {
+        dispatch('goToRepositories', {});
     }
 
     function init() {
@@ -29,7 +29,7 @@
             <input type="text" class="form-control" id="releaseDate" aria-describedby="releaseDateHelp"
                 bind:value={releaseDate} required>
             <small id="releaseDateHelp" class="form-text text-muted">If the release branch name is
-                foo-bar-2020XXXX then please provide 2020XXXX as input</small>
+                <kbd>foo-bar-2020XXXX</kbd> then please provide <kbd>2020XXXX</kbd> as input</small>
         </div>
         <button type="submit" class="float-right btn btn-warning">
             <svg height="21" viewBox="0 0 21 21" width="21" xmlns="http://www.w3.org/2000/svg">
@@ -40,7 +40,7 @@
             </svg>
             Check Status
         </button>
-        <button type="button" class="float-right btn btn-link" on:click={goToArtifacts}>Cancel</button>
+        <button type="button" class="float-right btn btn-link" on:click={goToRepositories}>Cancel</button>
     </form>
 
 </div>
