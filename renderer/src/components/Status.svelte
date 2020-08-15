@@ -58,7 +58,7 @@
          <div class="card">
             <div class="text-center mb-1">
                <h3 class="display-4 bg-light text-dark p-1">Status Checker</h3>
-               <p>Details to be filled</p>
+               <p>Check the retrofit status for any release date</p>
             </div>
          </div>
       </div>
@@ -107,13 +107,11 @@
              </tr>
              {:then response}
              <tr 
-                class:bg-success="{response.ahead_by == 0}"
-                class:text-white="{response.ahead_by == 0 || (response.ahead_by && response.ahead_by != 0 
-                || (response.message == 'Bad credentials')) }"
-                class:bg-danger="{response.ahead_by && response.ahead_by != 0 
-                || (response.message == 'Bad credentials')}"
-                class:bg-warning="{response.message == 'Not Found'}"
-                class:text-dark="{response.message == 'Not Found'}"
+                class:alert-success="{response.ahead_by == 0}"
+                class:alert-danger="{response.ahead_by && response.ahead_by > 0 
+                || response.message != 'Not Found'}"
+                class:alert-warning="{response.message == 'Not Found'}"
+                class="alert"
                 >
                 <th scope="row">{i+1}</th>
                 <td>{artifact.artName}</td>
@@ -126,8 +124,10 @@
                 <td>Branch Doesn't exist</td>
                 {:else if response.message == "Bad credentials"}
                 <td>Bad Credentials</td>
-                {:else}
+                {:else if response.ahead_by && response.ahead_by > 0}
                 <td>Not Completed</td>
+                {:else}
+                <td>Error occurred: {response.message}</td>
                 {/if}
              </tr>
              {:catch error}

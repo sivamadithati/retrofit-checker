@@ -68,7 +68,7 @@
          <div class="card">
             <div class="text-center mb-1">
                <h3 class="display-4 bg-light text-dark p-1">Artifacts</h3>
-               <p>Change the Github Token or the Organization name</p>
+               <p>View, Add and Search the artifacts</p>
             </div>
          </div>
       </div>
