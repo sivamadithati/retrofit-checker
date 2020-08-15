@@ -26,7 +26,7 @@ $ npm run dist
 - https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
 
 ### While creating PAT:
-- Select Scope as "repo" as shown below.
+- Select Scope as `repo` as shown below.
 - Make sure that you enable the SSO for the PAT.
 
 ### Enabling SSO for PAT:
@@ -34,8 +34,8 @@ $ npm run dist
 
 # Legend
 Details about how we can get the various required parameters to use in the application.
-Following is the sampel Github URL in general https://github.com/FooBar/foo/tree/foo-branch-2020XXXX
-- Organization Name: FooBar
-- Repository Name: foo
-- Repository Branch Name: foo-branch-2020XXXX
-- Repository Branch Prefix: foo-branch- 
+Following is the sampel Github URL in general https://github.com/`FooBar`/`foo`/tree/`foo-branch-2020XXXX`
+- Organization Name: `FooBar`
+- Repository Name: `foo`
+- Repository Branch Name: `foo-branch-2020XXXX`
+- Repository Branch Prefix: `foo-branch-` 
