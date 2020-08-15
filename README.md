@@ -34,7 +34,7 @@ $ npm run dist
 
 # Legend
 Details about how we can get the various required parameters to use in the application.
-Following is the sampel Github URL in general https://github.com/`FooBar`/`foo`/tree/`foo-branch-2020XXXX`
+Following is the sampel Github URL in general https://github.com/FooBar/foo/tree/foo-branch-2020XXXX
 - Organization Name: `FooBar`
 - Repository Name: `foo`
 - Repository Branch Name: `foo-branch-2020XXXX`
