@@ -20,13 +20,22 @@ $ cd retrofit-checker
 $ npm install
 $ npm run dist
 ```
-# Useful Resources
+# Personal Access Token (PAT)
 
-- To create the personal access token: https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
+### To create PAT:
+- https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
+
+### While creating PAT:
+- Select Scope as "repo" as shown below.
+- Make sure that you enable the SSO for the PAT.
+
+### Enabling SSO for PAT:
+ - https://docs.github.com/en/github/authenticating-to-github/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on
 
 # Legend
 Details about how we can get the various required parameters to use in the application.
-Following is the sampel Github URL in general https://github.com/FooBar/foo/tree/foo-branch
+Following is the sampel Github URL in general https://github.com/FooBar/foo/tree/foo-branch-2020XXXX
 - Organization Name: FooBar
 - Repository Name: foo
-- Branch Name: foo-branch
+- Repository Branch Name: foo-branch-2020XXXX
+- Repository Branch Prefix: foo-branch- 
