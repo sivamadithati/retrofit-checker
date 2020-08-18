@@ -31,7 +31,7 @@
     init();
 </script>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand">
         <svg height="30" viewBox="0 0 21 21" width="30" xmlns="http://www.w3.org/2000/svg">
             <g fill="none" fill-rule="evenodd" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"

@@ -147,7 +147,7 @@
       on:goToGithubConfig={goToGithubConfig}
   />
 
-  <div class="container-fluid p-0">
+  <div class="container-fluid p-0 mt-5">
       <Jumbotron token={appObj.token} orgName={appObj.orgName} />
     <div class="row justify-content-center ">
       <!-- Form to enter the Github details: Organization Name and the Personal Access Token -->

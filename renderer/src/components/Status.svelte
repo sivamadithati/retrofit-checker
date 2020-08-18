@@ -108,7 +108,7 @@
              <tr 
                 class:alert-success="{response.ahead_by == 0}"
                 class:alert-danger="{response.ahead_by && response.ahead_by > 0 
-                || response.message != 'Not Found'}"
+                || response.message && response.message != 'Not Found'}"
                 class:alert-warning="{response.message == 'Not Found'}"
                 class="alert"
                 >
